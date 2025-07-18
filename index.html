@@ -1,0 +1,784 @@
+import React, { useState } from 'react';
+import { MessageCircle, Send, Camera, Home, Book, User, Trophy, Clock, CheckCircle, Star, ArrowRight, Mic } from 'lucide-react';
+
+const StudyBuddyApp = () => {
+  const [currentView, setCurrentView] = useState('library');
+  const [selectedSubject, setSelectedSubject] = useState('math');
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      type: 'ai',
+      content: "Hi Rico! I'm your Study Buddy. Got stuck on any homework? Just send it my way and I'll help you work through it step by step!",
+      timestamp: "2:30 PM"
+    },
+    {
+      id: 100,
+      type: 'user',
+      content: "📸 [Photo uploaded: Math problem - 3/4 + 2/8 = ?]",
+      timestamp: "2:35 PM"
+    },
+    {
+      id: 101,
+      type: 'ai',
+      content: "I can see you're working on adding fractions! Before we solve this together, what do you notice about the denominators 4 and 8?",
+      timestamp: "2:35 PM"
+    },
+    {
+      id: 102,
+      type: 'user',
+      content: "Um, 8 is bigger than 4?",
+      timestamp: "2:36 PM"
+    },
+    {
+      id: 103,
+      type: 'ai',
+      content: "Exactly! 8 is actually 4 × 2. This means we can make both fractions have the same denominator. Can you think of what 3/4 would be if we changed the denominator to 8?",
+      timestamp: "2:36 PM"
+    },
+    {
+      id: 104,
+      type: 'user',
+      content: "Maybe 6/8?",
+      timestamp: "2:37 PM"
+    },
+    {
+      id: 105,
+      type: 'ai',
+      content: "Perfect! 🎉 You got it! 3/4 = 6/8. Now you have 6/8 + 2/8. When denominators are the same, what do you do with the numerators?",
+      timestamp: "2:37 PM"
+    }
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
+
+  const handleSendMessage = () => {
+    if (inputMessage.trim()) {
+      const newMessage = {
+        id: messages.length + 1,
+        type: 'user',
+        content: inputMessage,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      
+      setMessages([...messages, newMessage]);
+      setInputMessage('');
+      
+      setTimeout(() => {
+        const aiResponse = {
+          id: messages.length + 2,
+          type: 'ai',
+          content: "Great question! Let me help you think through this step by step. What do you think might be the first step to solve this problem?",
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages(prev => [...prev, aiResponse]);
+      }, 1500);
+    }
+  };
+
+  // 主页组件
+  const HomePage = () => (
+    <div className="p-8 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-800">Hi Rico! 👋</h1>
+          <p className="text-xl text-gray-600 mt-2">Ready to learn something awesome today?</p>
+        </div>
+        <div className="bg-yellow-100 px-6 py-3 rounded-2xl flex items-center space-x-3">
+          <Trophy className="w-6 h-6 text-yellow-600" />
+          <span className="font-semibold text-gray-700">Learning Streak: 12 days</span>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl p-8 shadow-sm mb-8">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Today's Progress</h2>
+        <div className="grid grid-cols-4 gap-6">
+          <div className="text-center">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <CheckCircle className="w-10 h-10 text-green-500" />
+            </div>
+            <p className="text-gray-600 mb-1">Problems Solved</p>
+            <p className="text-3xl font-bold text-gray-800">8</p>
+          </div>
+          <div className="text-center">
+            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Clock className="w-10 h-10 text-blue-500" />
+            </div>
+            <p className="text-gray-600 mb-1">Study Time</p>
+            <p className="text-3xl font-bold text-gray-800">45m</p>
+          </div>
+          <div className="text-center">
+            <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Trophy className="w-10 h-10 text-purple-500" />
+            </div>
+            <p className="text-gray-600 mb-1">Badges Earned</p>
+            <p className="text-3xl font-bold text-gray-800">12</p>
+          </div>
+          <div className="text-center">
+            <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Star className="w-10 h-10 text-orange-500" />
+            </div>
+            <p className="text-gray-600 mb-1">Accuracy</p>
+            <p className="text-3xl font-bold text-gray-800">96%</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-8">
+        <div 
+          className="bg-white rounded-3xl p-10 shadow-sm cursor-pointer hover:shadow-md transition-shadow grid grid-cols-3 gap-8 items-center"
+          onClick={() => setCurrentView('math')}
+        >
+          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
+            <span className="text-4xl">📐</span>
+          </div>
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-2">Math</h3>
+            <p className="text-lg text-gray-600">Fractions & Decimals</p>
+          </div>
+          <div className="text-right">
+            <div className="w-48 bg-gray-200 rounded-full h-3 mb-3 ml-auto">
+              <div className="bg-red-500 h-3 rounded-full" style={{ width: '75%' }}></div>
+            </div>
+            <div className="flex items-center justify-end gap-3 text-gray-600">
+              <span>Progress: 75%</span>
+              <ArrowRight className="w-5 h-5" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-3xl p-10 shadow-sm cursor-pointer hover:shadow-md transition-shadow grid grid-cols-3 gap-8 items-center">
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+            <span className="text-4xl">🔬</span>
+          </div>
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-2">Science</h3>
+            <p className="text-lg text-gray-600">Solar System</p>
+          </div>
+          <div className="text-right">
+            <div className="w-48 bg-gray-200 rounded-full h-3 mb-3 ml-auto">
+              <div className="bg-green-500 h-3 rounded-full" style={{ width: '45%' }}></div>
+            </div>
+            <div className="flex items-center justify-end gap-3 text-gray-600">
+              <span>Progress: 45%</span>
+              <ArrowRight className="w-5 h-5" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl p-10 shadow-sm cursor-pointer hover:shadow-md transition-shadow grid grid-cols-3 gap-8 items-center">
+          <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+            <span className="text-4xl">📚</span>
+          </div>
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-2">English</h3>
+            <p className="text-lg text-gray-600">Reading Comprehension</p>
+          </div>
+          <div className="text-right">
+            <div className="w-48 bg-gray-200 rounded-full h-3 mb-3 ml-auto">
+              <div className="bg-blue-500 h-3 rounded-full" style={{ width: '60%' }}></div>
+            </div>
+            <div className="flex items-center justify-end gap-3 text-gray-600">
+              <span>Progress: 60%</span>
+              <ArrowRight className="w-5 h-5" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // 作业辅导页面组件
+  const HomeworkPage = () => (
+    <div className="flex flex-col h-screen">
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 flex items-center">
+        <button 
+          onClick={() => setCurrentView('home')}
+          className="p-2 bg-white/20 rounded-xl hover:bg-white/30 transition-colors mr-4"
+        >
+          <ArrowRight className="w-6 h-6 rotate-180" />
+        </button>
+        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
+          <span className="text-2xl">🤖</span>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold">StudyBuddy AI</h2>
+          <p className="text-blue-100">Your homework helper</p>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-2xl px-6 py-4 rounded-3xl ${
+                message.type === 'user'
+                  ? 'bg-blue-500 text-white rounded-br-lg'
+                  : 'bg-white text-gray-800 rounded-bl-lg shadow-sm'
+              }`}
+            >
+              <p className="text-lg">{message.content}</p>
+              <p className={`text-sm mt-2 ${
+                message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
+              }`}>
+                {message.timestamp}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="p-6 border-t bg-white">
+        <div className="flex items-center space-x-4">
+          <button className="p-4 text-gray-500 hover:text-gray-700 bg-gray-100 rounded-2xl transition-colors">
+            <Camera className="w-6 h-6" />
+          </button>
+          <button className="p-4 text-gray-500 hover:text-gray-700 bg-gray-100 rounded-2xl transition-colors">
+            <Mic className="w-6 h-6" />
+          </button>
+          <div className="flex-1">
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Ask me about your homework, upload a photo, or describe your problem..."
+              className="w-full px-6 py-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+            />
+          </div>
+          <button 
+            onClick={handleSendMessage}
+            className="bg-blue-500 text-white p-4 rounded-2xl hover:bg-blue-600 transition-colors"
+          >
+            <Send className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // 渲染当前页面
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'home':
+        return <HomePage />;
+      case 'homework':
+        return <HomeworkPage />;
+      case 'library':
+        return (
+          <div className="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen">
+            {/* 学科切换tab */}
+            <div className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
+              <div className="flex space-x-6">
+                <button
+                  onClick={() => setSelectedSubject('math')}
+                  className={`px-6 py-3 rounded-2xl font-medium transition-colors ${
+                    selectedSubject === 'math' 
+                      ? 'bg-red-100 text-red-700' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  📐 Mathematics
+                </button>
+                <button
+                  onClick={() => setSelectedSubject('science')}
+                  className={`px-6 py-3 rounded-2xl font-medium transition-colors ${
+                    selectedSubject === 'science' 
+                      ? 'bg-green-100 text-green-700' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  🔬 Science
+                </button>
+                <button
+                  onClick={() => setSelectedSubject('english')}
+                  className={`px-6 py-3 rounded-2xl font-medium transition-colors ${
+                    selectedSubject === 'english' 
+                      ? 'bg-blue-100 text-blue-700' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  📚 English
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-8">
+              {/* 汇总统计 - 三大块 */}
+              <div className="grid grid-cols-3 gap-6 mb-8">
+                <div className="bg-white rounded-2xl p-6 shadow-sm text-center">
+                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-orange-600 font-bold text-xl">+</span>
+                  </div>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {selectedSubject === 'math' ? '3' : selectedSubject === 'science' ? '1' : '0'}
+                  </p>
+                  <p className="text-gray-600">Today's New Mistakes</p>
+                </div>
+                <div className="bg-white rounded-2xl p-6 shadow-sm text-center">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-red-600 font-bold text-xl">!</span>
+                  </div>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {selectedSubject === 'math' ? '8' : selectedSubject === 'science' ? '4' : '2'}
+                  </p>
+                  <p className="text-gray-600">Persistent Mistakes</p>
+                </div>
+                <div className="bg-white rounded-2xl p-6 shadow-sm text-center">
+                  <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-yellow-600 font-bold text-xl">⚠</span>
+                  </div>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {selectedSubject === 'math' ? '12' : selectedSubject === 'science' ? '6' : '3'}
+                  </p>
+                  <p className="text-gray-600">Weak Area Mistakes</p>
+                </div>
+              </div>
+
+              {/* 错题列表 */}
+              <div className="bg-white rounded-3xl p-8 shadow-sm">
+                {/* 筛选器和错题总数 */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-4 flex-wrap">
+                    <select className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                      <option>All Time</option>
+                      <option>Today</option>
+                      <option>This Week</option>
+                      <option>This Month</option>
+                    </select>
+                    <select className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                      <option>All Error Types</option>
+                      <option>Calculation Error</option>
+                      <option>Concept Error</option>
+                      <option>Method Error</option>
+                    </select>
+                    <select className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                      <option>All Problem Types</option>
+                      <option>Multiple Choice</option>
+                      <option>Fill in Blank</option>
+                      <option>Word Problem</option>
+                    </select>
+                    <select className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                      <option>All Grades</option>
+                      <option>Grade 4</option>
+                      <option>Grade 5</option>
+                      <option>Grade 6</option>
+                    </select>
+                    <label className="flex items-center space-x-2 text-sm">
+                      <input type="checkbox" defaultChecked className="rounded border-gray-300" />
+                      <span className="text-gray-700">Show unmastered only</span>
+                    </label>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Total mistakes: {selectedSubject === 'math' ? '23' : selectedSubject === 'science' ? '11' : '5'}
+                  </div>
+                </div>
+
+                {/* 错题卡片列表 */}
+                <div className="space-y-6">
+                  {selectedSubject === 'math' && (
+                    <>
+                      <div className="border border-gray-200 rounded-xl p-6">
+                        {/* 错题头部信息 */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-4">
+                            <span className="text-xs text-gray-500">Oct 15, 2024</span>
+                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Word Problem</span>
+                            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Grade 5</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Not Mastered</span>
+                            <button className="text-gray-400 hover:text-red-500 transition-colors">
+                              <span className="text-lg">×</span>
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {/* 错题内容 */}
+                        <div className="mb-4">
+                          <p className="text-gray-800 font-medium text-lg mb-2">¾ - ½ = ?</p>
+                        </div>
+                        
+                        {/* 错误原因 */}
+                        <div className="mb-4">
+                          <p className="text-sm font-medium text-gray-700 mb-1">Error Reason:</p>
+                          <p className="text-sm text-red-600">Common denominator error</p>
+                        </div>
+                        
+                        {/* 操作按钮 */}
+                        <div className="flex space-x-3">
+                          <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                            Show Answer
+                          </button>
+                          <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">
+                            Correct Mistake
+                          </button>
+                          <button className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm">
+                            Similar Practice
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="border border-gray-200 rounded-xl p-6">
+                        {/* 错题头部信息 */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-4">
+                            <span className="text-xs text-gray-500">Oct 13, 2024</span>
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Calculation</span>
+                            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Grade 5</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Not Mastered</span>
+                            <button className="text-gray-400 hover:text-red-500 transition-colors">
+                              <span className="text-lg">×</span>
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {/* 错题内容 */}
+                        <div className="mb-4">
+                          <p className="text-gray-800 font-medium text-lg mb-2">0.25 + 0.375 = ?</p>
+                        </div>
+                        
+                        {/* 错误原因 */}
+                        <div className="mb-4">
+                          <p className="text-sm font-medium text-gray-700 mb-1">Error Reason:</p>
+                          <p className="text-sm text-red-600">Decimal place alignment</p>
+                        </div>
+                        
+                        {/* 操作按钮 */}
+                        <div className="flex space-x-3">
+                          <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                            Show Answer
+                          </button>
+                          <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">
+                            Correct Mistake
+                          </button>
+                          <button className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm">
+                            Similar Practice
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  
+                  {selectedSubject === 'science' && (
+                    <>
+                      <div className="border border-gray-200 rounded-xl p-6">
+                        {/* 错题头部信息 */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-4">
+                            <span className="text-xs text-gray-500">Oct 16, 2024</span>
+                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Multiple Choice</span>
+                            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Grade 5</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Not Mastered</span>
+                            <button className="text-gray-400 hover:text-red-500 transition-colors">
+                              <span className="text-lg">×</span>
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {/* 错题内容 */}
+                        <div className="mb-4">
+                          <p className="text-gray-800 font-medium text-lg mb-2">Which planet is closest to the Sun?</p>
+                        </div>
+                        
+                        {/* 错误原因 */}
+                        <div className="mb-4">
+                          <p className="text-sm font-medium text-gray-700 mb-1">Error Reason:</p>
+                          <p className="text-sm text-red-600">Confused Mercury with Venus</p>
+                        </div>
+                        
+                        {/* 操作按钮 */}
+                        <div className="flex space-x-3">
+                          <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                            Show Answer
+                          </button>
+                          <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">
+                            Correct Mistake
+                          </button>
+                          <button className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm">
+                            Similar Practice
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="border border-gray-200 rounded-xl p-6">
+                        {/* 错题头部信息 */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-4">
+                            <span className="text-xs text-gray-500">Oct 12, 2024</span>
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Fill in Blank</span>
+                            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Grade 5</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Not Mastered</span>
+                            <button className="text-gray-400 hover:text-red-500 transition-colors">
+                              <span className="text-lg">×</span>
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {/* 错题内容 */}
+                        <div className="mb-4">
+                          <p className="text-gray-800 font-medium text-lg mb-2">What happens when water boils?</p>
+                        </div>
+                        
+                        {/* 错误原因 */}
+                        <div className="mb-4">
+                          <p className="text-sm font-medium text-gray-700 mb-1">Error Reason:</p>
+                          <p className="text-sm text-red-600">Missed gas formation concept</p>
+                        </div>
+                        
+                        {/* 操作按钮 */}
+                        <div className="flex space-x-3">
+                          <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                            Show Answer
+                          </button>
+                          <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">
+                            Correct Mistake
+                          </button>
+                          <button className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm">
+                            Similar Practice
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  
+                  {selectedSubject === 'english' && (
+                    <div className="border border-gray-200 rounded-xl p-6">
+                      {/* 错题头部信息 */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center space-x-4">
+                          <span className="text-xs text-gray-500">Oct 11, 2024</span>
+                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Reading Comp</span>
+                          <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Grade 5</span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Not Mastered</span>
+                          <button className="text-gray-400 hover:text-red-500 transition-colors">
+                            <span className="text-lg">×</span>
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {/* 错题内容 */}
+                      <div className="mb-4">
+                        <p className="text-gray-800 font-medium text-lg mb-2">Main idea identification in "The Little Prince"</p>
+                      </div>
+                      
+                      {/* 错误原因 */}
+                      <div className="mb-4">
+                        <p className="text-sm font-medium text-gray-700 mb-1">Error Reason:</p>
+                        <p className="text-sm text-red-600">Focused on details instead of main theme</p>
+                      </div>
+                      
+                      {/* 操作按钮 */}
+                      <div className="flex space-x-3">
+                        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                          Show Answer
+                        </button>
+                        <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">
+                          Correct Mistake
+                        </button>
+                        <button className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm">
+                          Similar Practice
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'profile':
+        return (
+          <div className="p-8 bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen">
+            <div className="max-w-4xl mx-auto">
+              {/* Profile Header */}
+              <div className="bg-white rounded-3xl p-8 shadow-sm mb-8 text-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-3xl text-white font-bold">R</span>
+                </div>
+                <h2 className="text-3xl font-bold text-gray-800">Rico Lee</h2>
+                <p className="text-xl text-gray-600 mt-2">Grade 5 • Lincoln Elementary</p>
+                <div className="flex justify-center mt-6">
+                  <div className="bg-yellow-100 px-6 py-3 rounded-2xl flex items-center space-x-3">
+                    <Trophy className="w-6 h-6 text-yellow-600" />
+                    <span className="font-semibold text-yellow-700">Learning Streak: 12 days 🔥</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                <div className="bg-white rounded-3xl p-6 shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Learning Stats</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-blue-600">847</div>
+                      <div className="text-sm text-gray-600">Problems Solved</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-green-600">96%</div>
+                      <div className="text-sm text-gray-600">Success Rate</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-purple-600">45</div>
+                      <div className="text-sm text-gray-600">Hours Studied</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-orange-600">23</div>
+                      <div className="text-sm text-gray-600">Badges Earned</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-3xl p-6 shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Recent Achievements</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <Trophy className="w-6 h-6 text-yellow-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-800">Math Master</p>
+                        <p className="text-sm text-gray-600">Solved 100 math problems</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <Star className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-800">Quick Learner</p>
+                        <p className="text-sm text-gray-600">Completed 5 topics in one day</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-800">Consistent Student</p>
+                        <p className="text-sm text-gray-600">12-day learning streak</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Settings */}
+              <div className="bg-white rounded-3xl p-8 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-800 mb-6">Settings</h3>
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-gray-800">Study Reminders</p>
+                      <p className="text-sm text-gray-600">Get notified when it's time to practice</p>
+                    </div>
+                    <div className="w-14 h-8 bg-blue-500 rounded-full relative cursor-pointer">
+                      <div className="absolute right-1 top-1 w-6 h-6 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-gray-800">Voice Responses</p>
+                      <p className="text-sm text-gray-600">Hear StudyBuddy speak answers aloud</p>
+                    </div>
+                    <div className="w-14 h-8 bg-gray-300 rounded-full relative cursor-pointer">
+                      <div className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-gray-800">Parent Reports</p>
+                      <p className="text-sm text-gray-600">Send weekly progress reports to parents</p>
+                    </div>
+                    <div className="w-14 h-8 bg-blue-500 rounded-full relative cursor-pointer">
+                      <div className="absolute right-1 top-1 w-6 h-6 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-gray-800">Difficulty Level</p>
+                      <p className="text-sm text-gray-600">Automatically adjust based on performance</p>
+                    </div>
+                    <select className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Adaptive</option>
+                      <option>Easy</option>
+                      <option>Medium</option>
+                      <option>Hard</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      default:
+        return <HomePage />;
+    }
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden">
+      {/* 页面指示器 */}
+      <div className="bg-gray-100 p-3 text-center text-sm font-medium text-gray-600">
+        当前页面: {currentView === 'home' ? '主页' : currentView === 'homework' ? '作业辅导' : currentView === 'library' ? '学习库' : '个人档案'}
+      </div>
+
+      {/* 主内容区域 */}
+      {renderCurrentView()}
+
+      {/* 底部导航 */}
+      <div className="bg-white border-t border-gray-200 px-8 py-6">
+        <div className="flex justify-around">
+          <button
+            onClick={() => setCurrentView('home')}
+            className={`flex flex-col items-center space-y-2 p-4 rounded-2xl transition-colors ${
+              currentView === 'home' ? 'text-blue-500 bg-blue-50' : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <Home className="w-8 h-8" />
+            <span className="text-sm font-medium">Home</span>
+          </button>
+          <button
+            onClick={() => setCurrentView('homework')}
+            className={`flex flex-col items-center space-y-2 p-4 rounded-2xl transition-colors ${
+              currentView === 'homework' ? 'text-blue-500 bg-blue-50' : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <MessageCircle className="w-8 h-8" />
+            <span className="text-sm">Homework</span>
+          </button>
+          <button
+            onClick={() => setCurrentView('library')}
+            className={`flex flex-col items-center space-y-2 p-4 rounded-2xl transition-colors ${
+              currentView === 'library' ? 'text-blue-500 bg-blue-50' : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <Book className="w-8 h-8" />
+            <span className="text-sm">Library</span>
+          </button>
+          <button
+            onClick={() => setCurrentView('profile')}
+            className={`flex flex-col items-center space-y-2 p-4 rounded-2xl transition-colors ${
+              currentView === 'profile' ? 'text-blue-500 bg-blue-50' : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <User className="w-8 h-8" />
+            <span className="text-sm">Profile</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StudyBuddyApp;
